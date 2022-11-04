@@ -32,10 +32,10 @@ const func = async function(msg, args) {
       if (logfileData.length > charLimit) {
         let chunks = splitText(logfileData, charLimit);
         chunks.forEach(chunk => {
-          msg.channel.send(chunk);
+          msg.channel.send(`\`\`\`${chunk}\`\`\``);
         });
       } else {
-        msg.channel.send(logfileData);
+        msg.channel.send(`\`\`\`${logfileData}\`\`\``);
       }
     } else {
       msg.channel.send('Dieser Logfile ist nicht vorhanden.');
