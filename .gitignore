@@ -1,0 +1,5 @@
+/.env
+/node_modules
+/data/*
+/todo.txt
+/my_log.log
