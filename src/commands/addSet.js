@@ -17,6 +17,9 @@ const func = async function(msg, args) {
   let setsUpdated = [];
 
   for (const arg of args) {
+
+    if (arg === "--np") continue;
+
     // convert set names to lowercase
     const setToAdd = arg.toLowerCase();
 
@@ -52,9 +55,9 @@ const func = async function(msg, args) {
     msg.channel.send(`Sets erfolgreich hinzugefügt: ${setsUpdated.join(", ")}`);
 
     // post the cards
-    update(msg);
+    update(msg, args)
   }
 }
 
 module.exports = func;
-func.docstring = "Fügt ein oder mehrere Sets zur Beobachtung hinzu. Bsp.: !spoilerzan addSet JMP ZNR KHM";
+func.docstring = "Fügt ein oder mehrere Sets zur Beobachtung hinzu. Bsp.: !spoilerzan addSet JMP ZNR KHM. --np verhindert das Posten bereits vorhandener Karten";

@@ -28,6 +28,7 @@ module.exports = async function(msg) {
   if (cmd_char === process.env.CMD_CHAR) {
     if (command in commands) {
       commands[command](msg, tokens);
+      console.log(msg.content);
     } else {
       let text = "Ich kenne diesen Befehl nicht.\nVerfügbare Befehle:\n```";
 

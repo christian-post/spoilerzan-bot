@@ -9,10 +9,18 @@ const getSet = require("../utils.js").getSet;
 
 const func = async function(msg, args) {
   // args have to be a valid set codes (e.g. "sld"), separated by a space
+  // removeSet --all removes every set from the list
 
   // Master command
   if (!process.env.MASTER_USERS.includes(msg.author.id)) {
     msg.reply(BOT_DATA.msgForbidden);
+    return;
+  }
+
+  // --all removes every set
+  if (args.includes("--all")) {
+    fs.writeFileSync("./data/sets-to-watch.json", JSON.stringify([]));
+    msg.channel.send("Alle Sets wurden erfolgreich entfernt");
     return;
   }
 

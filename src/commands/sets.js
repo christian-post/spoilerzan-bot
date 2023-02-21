@@ -14,7 +14,13 @@ const func = async function(msg, args) {
       setUris.push(set.scryfall_uri);
     }
 
-    let str = "Sets unter Beobachtung:";
+    let str;
+
+    if (sets.length === 0) {
+      str = "Keine Sets unter Beobachtung."
+    } else {
+      str = "Sets unter Beobachtung:";
+    }
 
     for (let i = 0; i < sets.length; i++) {
       str += "\n• "

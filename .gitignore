@@ -4,3 +4,4 @@ data/*
 !data/.gitkeep
 /todo.txt
 /my_log.log
+*.bak

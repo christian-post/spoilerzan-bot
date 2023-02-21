@@ -26,8 +26,32 @@ const getSet = async function(code) {
 const getSpoiledCards = async function(setData) {
   const url = `https://api.scryfall.com/cards/search?order=spoiled&unique=prints&q=e%3A${setData["code"]}`;
   const res = await fetch(url);
+
+  console.log(`got response from ${url}`);
+
+  let cards = [];
+
   if (res.status === 200) {
-    const cards = await res.json();
+
+    const cardData = await res.json();
+    cards = cards.concat(cardData.data);
+
+    // scryfall responses sometimes have more cards under another url
+    let nextPage = cardData.next_page;
+
+    if (cardData.has_more) {
+      while (true) {
+        console.log(`more cards at ${nextPage}`);
+        await sleep(300);
+        const res2 = await fetch(nextPage);
+        const moreCardData = await res2.json();
+        cards = cards.concat(moreCardData.data);
+        if (!moreCardData.has_more) break;
+        nextPage = moreCardData.next_page;
+      }
+    }
+   
+
     return cards;
   } else {
     console.log(`Error fetching cards for "${setData["code"]}" at ${url}. Error code ${res.status}.`);
@@ -66,10 +90,10 @@ const formatCardDataForPost = function(data) {
   // makes a string from the card data that gets posted to Discord
   return `${data?.scryfall_uri}
 
-${data?.name} ${data?.mana_cost}
-${data?.type_line}
-${data?.oracle_text}
-${data?.image_uris?.normal}
+${data?.name} ${data?.mana_cost || ""}
+${data?.type_line || ""}
+${data?.oracle_text || ""}
+${data?.image_uris?.normal || ""}
   `;
 }
 
@@ -110,8 +134,9 @@ const checkSets = async function() {
       const cards = await getSpoiledCards(setData);
       if (!cards) continue;
 
-      cards.data.slice(0, numCardsSpoiled).forEach(cardData => {
+      cards.slice(0, numCardsSpoiled).forEach(cardData => {
          newCards.push(formatCardDataForPost(cardData));
+        // newCards.push(cardData.name)  // TODO debugging
       });
 
       // update the card count in the local data
@@ -138,9 +163,12 @@ const checkSets = async function() {
 
 
 const postCards = async function(cardlist, channel) {
+  let index = 0;
   for (card of cardlist) {
     await sleep(300);
     channel.send(card);
+    console.log(index, card);
+    index++;
   }
 }
 

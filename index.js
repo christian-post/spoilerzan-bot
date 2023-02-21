@@ -40,7 +40,7 @@ const checkSetsRepeatedly = async function() {
   if (newCards.length > 0) {
     let channel = client.channels.cache.get(process.env.SPOILER_CHANNEL);
     postCards(newCards, channel);
-    console.log(`Neue Spoiler: ${newCards}`);
+    // console.log(`Neue Spoiler: ${newCards}`);
   } else {
     console.log("Keine neuen Spoiler.");
   }

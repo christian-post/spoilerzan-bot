@@ -5,7 +5,13 @@ const fs = require("fs");
 
 const splitText = function(str, limit) {
   // https://stackoverflow.com/questions/49836558/split-string-at-space-after-certain-number-of-characters-in-javascript
-  const regex = new RegExp(`.{1,${limit}}(?:\s|$)`, 'g');
+
+  if (limit === undefined) {
+	console.log('No limit for splitText. Default value set (1000).');
+	limit = 1000;
+  }
+
+  const regex = new RegExp(`.{1,${limit}}(?=\\s|$)`, 'g');
   let chunks = str.match(regex);
   return chunks;
 }
@@ -25,8 +31,8 @@ const func = async function(msg, args) {
       logfileData = null;
     }
 
-    // check if char limit is reached
-    const charLimit = process.env.CHAR_LIMIT;
+    // check if char limit is reached (includes formatting characters)
+    const charLimit = process.env.CHAR_LIMIT - 10;
 
     if (logfileData) {
       if (logfileData.length > charLimit) {
